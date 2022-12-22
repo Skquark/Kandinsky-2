@@ -26,8 +26,8 @@ class Kandinsky2:
             self.config['model_config']['inpainting'] = True
         else:
             raise ValueError('Only text2img, img2img and inpainting is available')
-        self.tokenizer1 = AutoTokenizer.from_pretrained(self.config['tokenizer_name1'])
-        self.tokenizer2 = AutoTokenizer.from_pretrained(self.config['tokenizer_name2'])
+        self.tokenizer1 = AutoTokenizer.from_pretrained(self.config['tokenizer_name1'], use_fast=False)
+        self.tokenizer2 = AutoTokenizer.from_pretrained(self.config['tokenizer_name2'], use_fast=False)
 
         self.text_encoder1 = TextEncoder(**self.config['text_enc_params1']).to(self.device).eval()
         self.text_encoder2 = TextEncoder(**self.config['text_enc_params2']).to(self.device).eval()
