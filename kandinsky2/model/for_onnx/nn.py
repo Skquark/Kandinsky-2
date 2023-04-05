@@ -29,7 +29,7 @@ class GroupNorm32(nn.GroupNorm):
         self.swish = swish
 
     def forward(self, x):
-        y = super().forward(x.float()).to(x.dtype)
+        y = super().forward(x).to(x.dtype)
         if self.swish == 1.0:
             y = F.silu(y)
         elif self.swish:
@@ -114,8 +114,9 @@ def timestep_embedding(timesteps, dim, max_period=10000):
         * torch.arange(start=0, end=half, dtype=torch.float32)
         / half
     ).to(device=timesteps.device)
+    c_dtype = timesteps.dtype
     args = timesteps[:, None].float() * freqs[None]
     embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
     if dim % 2:
         embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)
-    return embedding
+    return embedding.to(c_dtype)
